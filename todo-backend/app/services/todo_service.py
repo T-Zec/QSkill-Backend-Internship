@@ -5,6 +5,7 @@ from app.models.todo import Todo
 
 class TodoService:
 
+    # CRUD operation
     @staticmethod
     def create_todo():
         data = request.get_json()
@@ -103,6 +104,53 @@ class TodoService:
             "message": "Todo deleted successfully"
         }), 200
 
+    # Mark/unmark todo tasks as read
     @staticmethod
     def complete_todo(todo_id):
-        pass
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return jsonify({
+                "success": False,
+                "message": "Todo not found"
+            }), 404
+        
+        if todo.is_completed == True:
+            return jsonify({
+                "success": False,
+                "message": "Todo already marked as completed"
+            }), 400
+        
+        todo.is_completed = True
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Todo marked as completed",
+            "data": todo.to_dict()
+        }), 200
+    
+    @staticmethod
+    def imcomplete_todo(todo_id):
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return jsonify({
+                "success": False,
+                "message": "Todo not found"
+            }), 404
+
+        if todo.is_completed == False:
+            return jsonify({
+                "success": False,
+                "message": "Todo already unmarked as incompleted"
+            }), 400
+        
+        todo.is_completed = False
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Todo unmarked as incompleted",
+            "data": todo.to_dict()
+        }), 200
