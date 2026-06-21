@@ -57,11 +57,51 @@ class TodoService:
 
     @staticmethod
     def update_todo(todo_id):
-        pass
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return jsonify({
+                "success": False,
+                "message": "Todo not found"
+            }), 404        
+
+        data = request.get_json()
+
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "No data provided"
+            }), 400        
+        
+        for key, value in data.items():
+            if hasattr(todo, key):
+                setattr(todo, key, value)
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Todo updated successfully",
+            "data": todo.to_dict()
+        }), 200
 
     @staticmethod
     def delete_todo(todo_id):
-        pass
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return ({
+                "success": False,
+                "message": "Todo not found"
+            }), 404
+
+        db.session.delete(todo)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Todo deleted successfully"
+        }), 200
 
     @staticmethod
     def complete_todo(todo_id):

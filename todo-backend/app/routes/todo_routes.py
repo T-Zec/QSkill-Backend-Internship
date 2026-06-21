@@ -14,3 +14,11 @@ def get_all_todos():
 @todo_bp.route("/<int:todo_id>", methods=['GET'])
 def get_todo(todo_id):
     return TodoService.get_todo(todo_id)
+
+@todo_bp.route("/<int:todo_id>", methods=['PUT', 'PATCH'])
+def update_todo(todo_id):
+    return TodoService.update_todo(todo_id)
+
+@todo_bp.route("<int:todo_id>", methods=["DELETE"])
+def delete_todo(todo_id):
+    return TodoService.delete_todo(todo_id)
