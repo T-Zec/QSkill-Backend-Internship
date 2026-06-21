@@ -31,11 +31,29 @@ class TodoService:
 
     @staticmethod
     def get_all_todos():
-        pass
+        todos = Todo.query.all()
+
+        return jsonify({
+            "success": True,
+            "count": len(todos),
+            "data": [todo.to_dict() for todo in todos]
+        }), 200
 
     @staticmethod
     def get_todo(todo_id):
-        pass
+        # todo = Todo.query.get(todo_id)
+        todo = db.session.get(Todo, todo_id)
+
+        if not todo:
+            return jsonify({
+                "success": False,
+                "message": "Todo not found"
+            }), 404
+        
+        return jsonify({
+            "success": True,
+            "data": todo.to_dict()
+        }), 200
 
     @staticmethod
     def update_todo(todo_id):
