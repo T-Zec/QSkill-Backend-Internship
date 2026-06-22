@@ -38,11 +38,37 @@ class TodoService:
 
     @staticmethod
     def get_all_todos():
-        todos = Todo.query.all()
+        # todos = Todo.query.all()
+        page = request.args.get('page', 1, type=int)
+        per_page = request.args.get('per_page', 10, type=int)
+
+        if per_page > 100:
+            per_page = 100
+
+        pagination = Todo.query.order_by(Todo.created_at.desc()).paginate(
+            page=page,
+            per_page=per_page,
+            error_out=False
+        )
+
+        todos = pagination.items
+
+        # return jsonify({
+        #     "success": True,
+        #     "count": len(todos),
+        #     "data": [todo.to_dict() for todo in todos]
+        # }), 200
 
         return jsonify({
             "success": True,
-            "count": len(todos),
+            "pagination": {
+                "page": pagination.page,
+                "per_page": pagination.per_page,
+                "total": pagination.total,
+                "pages": pagination.pages,
+                "has_next": pagination.has_next,
+                "has_prev": pagination.has_prev
+            },
             "data": [todo.to_dict() for todo in todos]
         }), 200
 
