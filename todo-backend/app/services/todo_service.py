@@ -41,11 +41,18 @@ class TodoService:
         # todos = Todo.query.all()
         page = request.args.get('page', 1, type=int)
         per_page = request.args.get('per_page', 10, type=int)
+        completed = request.args.get('completed')
 
         if per_page > 100:
             per_page = 100
 
-        pagination = Todo.query.order_by(Todo.created_at.desc()).paginate(
+        query = Todo.query
+
+        if completed is not None:
+            is_completed = completed.lower() == "true"
+            query = query.filter(Todo.is_completed == is_completed)
+
+        pagination = query.order_by(Todo.created_at.desc()).paginate(
             page=page,
             per_page=per_page,
             error_out=False
