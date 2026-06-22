@@ -23,10 +23,15 @@ def update_todo(todo_id):
 def delete_todo(todo_id):
     return TodoService.delete_todo(todo_id)
 
+@todo_bp.route("/clear", methods=["DELETE"])
+def clear_todos():
+    return TodoService.clear_todos()
+
+
 @todo_bp.route("/<int:todo_id>/complete", methods=['PATCH'])
 def complete_todo(todo_id):
     return TodoService.complete_todo(todo_id)
 
 @todo_bp.route("/<int:todo_id>/incomplete", methods=['PATCH'])
-def impcomplete_todo(todo_id):
-    return TodoService.imcomplete_todo(todo_id)
+def incomplete_todo(todo_id):
+    return TodoService.incomplete_todo(todo_id)

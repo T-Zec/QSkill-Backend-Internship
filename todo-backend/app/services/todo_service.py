@@ -12,14 +12,20 @@ class TodoService:
 
         title = data.get("title")
         description = data.get("description")
+        
+        if len(title) > 255:
+            return jsonify({
+                "success": False,
+                "message": "Title cannot exceed 255 characters"
+            }), 400 
 
-        if not title:
+        if not title.strip():
             return jsonify({
                 "success": False,
                 "message": "Title is required"
             }), 400
 
-        todo = Todo(title=title, description=description)
+        todo = Todo(title=title.strip(), description=description)
 
         db.session.add(todo)
         db.session.commit()
@@ -91,7 +97,7 @@ class TodoService:
         todo = db.session.get(Todo, todo_id)
 
         if not todo:
-            return ({
+            return jsonify({
                 "success": False,
                 "message": "Todo not found"
             }), 404
@@ -103,6 +109,22 @@ class TodoService:
             "success": True,
             "message": "Todo deleted successfully"
         }), 200
+    
+    @staticmethod
+    def clear_todos():
+        if not Todo.query.first():
+            return jsonify({
+                "success": False,
+                "message": "No todos to clear"
+            }), 400
+        
+        Todo.query.delete()
+        db.session.commit()
+        return jsonify({
+            "success": True,
+            "message": "All todos cleared successfully"
+        }), 200
+    
 
     # Mark/unmark todo tasks as read
     @staticmethod
@@ -131,7 +153,7 @@ class TodoService:
         }), 200
     
     @staticmethod
-    def imcomplete_todo(todo_id):
+    def incomplete_todo(todo_id):
         todo = db.session.get(Todo, todo_id)
 
         if not todo:
