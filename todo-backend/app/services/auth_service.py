@@ -94,5 +94,10 @@ class AuthService:
         return jsonify({
             "success": True,
             "message": "Login successful",
-            "access_token": access_token
+            "access_token": access_token,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
         }), 200

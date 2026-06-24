@@ -11,6 +11,9 @@ class Todo(db.Model):
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", backref="todos")
+
     def to_dict(self):
         return {
             "id": self.id,
@@ -18,5 +21,6 @@ class Todo(db.Model):
             "description": self.description,
             "is_completed": self.is_completed,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
+            "user_id": self.user_id
         }

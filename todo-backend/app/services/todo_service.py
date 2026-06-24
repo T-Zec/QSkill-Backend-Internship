@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from flask_jwt_extended import get_jwt_identity
 
 from app.extension import db
 from app.models.todo import Todo
@@ -24,8 +25,10 @@ class TodoService:
                 "success": False,
                 "message": "Title is required"
             }), 400
+        
+        current_user_id = int(get_jwt_identity())
 
-        todo = Todo(title=title.strip(), description=description)
+        todo = Todo(title=title.strip(), description=description.strip(), user_id=current_user_id)
 
         db.session.add(todo)
         db.session.commit()
@@ -46,7 +49,9 @@ class TodoService:
         if per_page > 100:
             per_page = 100
 
-        query = Todo.query
+        current_user_id = int(get_jwt_identity())
+
+        query = Todo.query.filter_by(user_id=current_user_id)
 
         if completed is not None:
             is_completed = completed.lower() == "true"
@@ -81,8 +86,10 @@ class TodoService:
 
     @staticmethod
     def get_todo(todo_id):
-        # todo = Todo.query.get(todo_id)
-        todo = db.session.get(Todo, todo_id)
+        # todo = db.session.get(Todo, todo_id)
+        current_user_id = int(get_jwt_identity())
+
+        todo = Todo.query.filter_by(user_id=current_user_id)
 
         if not todo:
             return jsonify({
@@ -97,7 +104,10 @@ class TodoService:
 
     @staticmethod
     def update_todo(todo_id):
-        todo = db.session.get(Todo, todo_id)
+        current_user_id = int(get_jwt_identity())
+
+        # todo = db.session.get(Todo, todo_id)
+        todo = Todo.query.filter_by(id=todo_id, user_id=current_user_id).first()
 
         if not todo:
             return jsonify({
@@ -127,7 +137,10 @@ class TodoService:
 
     @staticmethod
     def delete_todo(todo_id):
-        todo = db.session.get(Todo, todo_id)
+        current_user_id = int(get_jwt_identity())
+
+        # todo = db.session.get(Todo, todo_id)
+        todo = Todo.query.filter_by(id=todo_id, user_id=current_user_id).first()
 
         if not todo:
             return jsonify({
@@ -145,14 +158,17 @@ class TodoService:
     
     @staticmethod
     def clear_todos():
-        if not Todo.query.first():
+        current_user_id = int(get_jwt_identity())
+
+        if not Todo.query.filter_by(user_id=current_user_id).first():
             return jsonify({
                 "success": False,
                 "message": "No todos to clear"
             }), 400
         
-        Todo.query.delete()
+        Todo.query.filter_by(user_id=current_user_id).delete()
         db.session.commit()
+        
         return jsonify({
             "success": True,
             "message": "All todos cleared successfully"
@@ -162,7 +178,9 @@ class TodoService:
     # Mark/unmark todo tasks as read
     @staticmethod
     def complete_todo(todo_id):
-        todo = db.session.get(Todo, todo_id)
+        current_user_id = int(get_jwt_identity())
+        
+        todo = Todo.query.filter_by(id=todo_id, user_id=current_user_id).first()
 
         if not todo:
             return jsonify({
@@ -187,7 +205,9 @@ class TodoService:
     
     @staticmethod
     def incomplete_todo(todo_id):
-        todo = db.session.get(Todo, todo_id)
+        current_user_id = int(get_jwt_identity())
+        
+        todo = Todo.query.filter_by(id=todo_id, user_id=current_user_id).first()
 
         if not todo:
             return jsonify({
