@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask_jwt_extended import jwt_required, get_jwt_identity
+from flask_jwt_extended import jwt_required
 
 from app.services.auth_service import AuthService
 
@@ -13,12 +13,7 @@ def register():
 def login():
     return AuthService.login()
 
-@auth_bp.route('/me', methods=['GET'])
+@auth_bp.route('/profile', methods=['GET'])
 @jwt_required()
-def me():
-    current_user = get_jwt_identity()
-
-    return {
-        "success": True,
-        "user_id": current_user
-    }, 200
+def profile():
+    return AuthService.profile()

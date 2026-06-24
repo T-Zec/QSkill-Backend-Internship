@@ -14,18 +14,24 @@ class TodoService:
         title = data.get("title")
         description = data.get("description")
         
-        if len(title) > 255:
-            return jsonify({
-                "success": False,
-                "message": "Title cannot exceed 255 characters"
-            }), 400 
-
-        if not title.strip():
+        if not title:
             return jsonify({
                 "success": False,
                 "message": "Title is required"
             }), 400
         
+        if len(title) > 255:
+            return jsonify({
+                "success": False,
+                "message": "Title cannot exceed 255 characters"
+            }), 400
+        
+        if len(description) > 255:
+            return jsonify({
+                "success": False,
+                "message": "Description cannot exceed 255 characters"
+            }), 400
+
         current_user_id = int(get_jwt_identity())
 
         todo = Todo(title=title.strip(), description=description.strip(), user_id=current_user_id)
@@ -89,7 +95,7 @@ class TodoService:
         # todo = db.session.get(Todo, todo_id)
         current_user_id = int(get_jwt_identity())
 
-        todo = Todo.query.filter_by(user_id=current_user_id)
+        todo = Todo.query.filter_by(user_id=current_user_id, id=todo_id).first()
 
         if not todo:
             return jsonify({

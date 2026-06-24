@@ -1,6 +1,6 @@
 from flask import request, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, get_jwt_identity
 
 from app.extension import db
 from app.models import User
@@ -95,6 +95,26 @@ class AuthService:
             "success": True,
             "message": "Login successful",
             "access_token": access_token,
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            }
+        }), 200
+    
+    @staticmethod
+    def profile():
+        current_user_id = int(get_jwt_identity())
+        user = User.query.filter_by(id=current_user_id).first()
+
+        if not user:
+            return jsonify({
+                "success": False,
+                "message": "User not found"
+            }), 404
+        
+        return jsonify({
+            "success": True,
             "user": {
                 "id": user.id,
                 "username": user.username,
