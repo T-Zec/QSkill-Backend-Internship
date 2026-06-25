@@ -6,6 +6,6 @@ load_dotenv()
 class Config:
     SQLALCHEMY_DATABASE_URI = os.getenv(
         "DATABASE_URL",
-        "sqlite:///library.db"
+        "sqlite:///books.db"
     )
     SQLALCHEMY_TRACK_MODIFICATIONS = False
