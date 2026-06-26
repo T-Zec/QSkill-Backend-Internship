@@ -16,6 +16,14 @@ def get_all_books():
 def get_book(book_id):
     return BookService.get_book(book_id)
 
-@book_bp.route("<int:book_id>", methods=['PATCH', 'PUT'])
+@book_bp.route("/<int:book_id>", methods=['PATCH', 'PUT'])
 def update_book(book_id):
     return BookService.update_book(book_id)
+
+@book_bp.route("/<int:book_id>", methods=['DELETE'])
+def delete_book(book_id):
+    return BookService.delete_book(book_id)
+
+@book_bp.route("/clear", methods=['DELETE'])
+def clear_books():
+    return BookService.clear_books()

@@ -155,3 +155,37 @@ class BookService:
             "message": "book updated successfully",
             "data": book.to_dict()
         }), 200
+    
+    @staticmethod
+    def delete_book(book_id):
+        book = db.session.get(Book, book_id)
+
+        if not book:
+            return jsonify({
+                "success": False,
+                "message": "Book not found"
+            }), 404
+
+        db.session.delete(book)
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Book deleted successfully"
+        }), 200
+    
+    @staticmethod
+    def clear_books():
+        Book.query.delete()
+        db.session.commit()
+
+        if not Book.query.first():
+            return jsonify({
+                "success": False,
+                "message": "No books to clear"
+            }), 404
+
+        return jsonify({
+            "success": True,
+            "message": "All books cleared successfully"
+        }), 200
