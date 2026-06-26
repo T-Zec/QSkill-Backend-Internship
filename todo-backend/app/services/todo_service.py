@@ -170,7 +170,7 @@ class TodoService:
             return jsonify({
                 "success": False,
                 "message": "No todos to clear"
-            }), 400
+            }), 404
         
         Todo.query.filter_by(user_id=current_user_id).delete()
         db.session.commit()

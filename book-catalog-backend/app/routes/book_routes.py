@@ -27,3 +27,7 @@ def delete_book(book_id):
 @book_bp.route("/clear", methods=['DELETE'])
 def clear_books():
     return BookService.clear_books()
+
+@book_bp.route("/search", methods=['GET'])
+def search_books():
+    return BookService.search_books()

@@ -189,3 +189,36 @@ class BookService:
             "success": True,
             "message": "All books cleared successfully"
         }), 200
+    
+    @staticmethod
+    def search_books():
+        title = request.args.get('title', type=str)
+        author = request.args.get('author', type=str)
+        genre = request.args.get("genre", type=str)
+        year = request.args.get("year", type=int)
+        availability = request.args.get('availability')
+
+        query = Book.query
+
+        if availability is not None:
+            is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability
+            query = query.filter(Book.availability == is_available)
+
+        if title:
+            query = query.filter(Book.title.ilike(f"%{title}%"))
+
+        if author:
+            query = query.filter(Book.author.ilike(f"%{author}%"))
+
+        if genre:
+            query = query.filter(Book.genre.ilike(f"%{genre}%"))
+
+        if year and len(str(year)) == 4:
+            query = query.filter(Book.publication_year.ilike(f"{year}"))
+
+        books = query.all()
+
+        return jsonify({
+            "success": True,
+            "data": [book.to_dict() for book in books]
+        }), 200
