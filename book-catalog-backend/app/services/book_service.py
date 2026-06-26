@@ -12,6 +12,7 @@ class BookService:
 
         title = data.get("title")
         author = data.get("author")
+        year = data.get("publication_year")
         
         if not title:
             return jsonify({
@@ -27,13 +28,26 @@ class BookService:
         
         if not author:
             return jsonify({
-                "success": "Author name is required"
+                "success": False,
+                "message": "Author name is required"
+            }), 400
+        
+        if Book.query.filter_by(title=title).first():
+            return jsonify({
+                "success": False,
+                "message": "Book with this title already exists"
             }), 400
         
         if len(author) > 255:
             return jsonify({
                 "success": False,
                 "message": "Author name cannot exceed 255 characters"
+            }), 400
+        
+        if len(str(year)) != 4:
+            return jsonify({
+                "success": False,
+                "message": "The publication year must be of 4 digits"
             }), 400
         
         book = Book(
@@ -67,7 +81,7 @@ class BookService:
         query = Book.query
 
         if availability is not None:
-            is_available = availability.lower() == 'true'
+            is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability
             query = query.filter(Book.availability == is_available)
 
         if title:
@@ -95,4 +109,49 @@ class BookService:
                 "has_prev": pagination.has_prev
             },
             "data": [book.to_dict() for book in books]
+        }), 200
+
+    @staticmethod
+    def get_book(book_id):
+        book = db.session.get(Book, book_id)
+
+        if not book:
+            return jsonify({
+                "success": False,
+                "message": "Book not found"
+            }), 404
+        
+        return jsonify({
+            "success": True,
+            "data": book.to_dict()
+        }), 200
+    
+    @staticmethod
+    def update_book(book_id):
+        book = db.session.get(Book, book_id)
+
+        if not book:
+            return jsonify({
+                "success": False,
+                "message": "Book not found"
+            }), 404
+
+        data = request.get_json()
+
+        if not data:
+            return jsonify({
+                "success": False,
+                "message": "No data provided"
+            }), 400
+        
+        for key, value in data.items():
+            if hasattr(book, key):
+                setattr(book, key, value)
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "book updated successfully",
+            "data": book.to_dict()
         }), 200
