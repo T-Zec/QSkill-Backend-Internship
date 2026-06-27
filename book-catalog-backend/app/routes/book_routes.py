@@ -1,10 +1,12 @@
 from flask import Blueprint
+from flask_jwt_extended import jwt_required
 
 from app.services.book_service import BookService
 
 book_bp = Blueprint('books', __name__, url_prefix="/api/books/")
 
 @book_bp.route("", methods=['POST'])
+@jwt_required()
 def create_book():
     return BookService.create_book()
 
@@ -17,14 +19,17 @@ def get_book(book_id):
     return BookService.get_book(book_id)
 
 @book_bp.route("/<int:book_id>", methods=['PATCH', 'PUT'])
+@jwt_required()
 def update_book(book_id):
     return BookService.update_book(book_id)
 
 @book_bp.route("/<int:book_id>", methods=['DELETE'])
+@jwt_required()
 def delete_book(book_id):
     return BookService.delete_book(book_id)
 
 @book_bp.route("/clear", methods=['DELETE'])
+@jwt_required()
 def clear_books():
     return BookService.clear_books()
 

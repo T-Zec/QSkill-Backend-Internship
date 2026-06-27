@@ -1,4 +1,5 @@
 from flask import request, jsonify
+from flask_jwt_extended import get_jwt_identity
 
 from app.extension import db
 from app.models.book import Book
@@ -50,12 +51,15 @@ class BookService:
                 "message": "The publication year must be of 4 digits"
             }), 400
         
+        current_user_id = int(get_jwt_identity())
+        
         book = Book(
-            title=data["title"],
-            author=data["author"],
-            genre=data["genre"],
+            title=data["title"].strip(),
+            author=data["author"].strip(),
+            genre=data["genre"].strip(),
             publication_year=data["publication_year"],
-            availability=data["availability"]
+            availability=data["availability"],
+            user_id=current_user_id
         )
 
         db.session.add(book)
@@ -80,7 +84,9 @@ class BookService:
         if per_page > 100:
             per_page = 100
 
-        query = Book.query
+        current_user_id = int(get_jwt_identity())
+
+        query = Book.query.filter_by(user_id=current_user_id)
 
         if availability is not None:
             is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability
@@ -121,7 +127,9 @@ class BookService:
 
     @staticmethod
     def get_book(book_id):
-        book = db.session.get(Book, book_id)
+        current_user_id = int(get_jwt_identity())
+
+        book = Book.query.filter_by(user_id=current_user_id, id=book_id).first()
 
         if not book:
             return jsonify({
@@ -136,7 +144,9 @@ class BookService:
     
     @staticmethod
     def update_book(book_id):
-        book = db.session.get(Book, book_id)
+        current_user_id = int(get_jwt_identity())
+
+        book = Book.query.filter_by(user_id=current_user_id, id=book_id).first()
 
         if not book:
             return jsonify({
@@ -166,7 +176,9 @@ class BookService:
     
     @staticmethod
     def delete_book(book_id):
-        book = db.session.get(Book, book_id)
+        current_user_id = int(get_jwt_identity())
+
+        book = Book.query.filter_by(id=book_id, user_id=current_user_id).first()
 
         if not book:
             return jsonify({
@@ -184,14 +196,16 @@ class BookService:
     
     @staticmethod
     def clear_books():
-        Book.query.delete()
-        db.session.commit()
+        current_user_id = int(get_jwt_identity())
 
-        if not Book.query.first():
+        if not Book.query.filter_by(user_id=current_user_id).first():
             return jsonify({
                 "success": False,
                 "message": "No books to clear"
             }), 404
+
+        Book.query.filter_by(user_id=current_user_id).delete()
+        db.session.commit()        
 
         return jsonify({
             "success": True,
@@ -206,7 +220,9 @@ class BookService:
         year = request.args.get("year", type=int)
         availability = request.args.get('availability')
 
-        query = Book.query
+        current_user_id = int(get_jwt_identity())
+
+        query = Book.query.filter_by(user_id=current_user_id)
 
         if availability is not None:
             is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability
