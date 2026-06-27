@@ -230,3 +230,18 @@ class BookService:
             "success": True,
             "data": [book.to_dict() for book in books]
         }), 200
+    
+    @staticmethod
+    def get_book_stats():
+        total_books = Book.query.count()
+        available_books = Book.query.filter_by(availability=True).count()
+        unavailable_books = Book.query.filter_by(availability=False).count()
+
+        return jsonify({
+            "success": True,
+            "data": {
+                "total_books": total_books,
+                "available_books": available_books,
+                "unavailable_books": unavailable_books
+            }
+        }), 200

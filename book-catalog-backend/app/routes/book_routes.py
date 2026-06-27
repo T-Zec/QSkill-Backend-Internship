@@ -31,3 +31,7 @@ def clear_books():
 @book_bp.route("/search", methods=['GET'])
 def search_books():
     return BookService.search_books()
+
+@book_bp.route("/stats", methods=['GET'])
+def get_book_stats():
+    return BookService.get_book_stats()
