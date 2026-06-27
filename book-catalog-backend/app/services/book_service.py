@@ -71,9 +71,11 @@ class BookService:
     def get_all_books():
         page = request.args.get("page", 1, type=int)
         per_page = request.args.get("per_page", 10, type=int)
-        availability = request.args.get('availability')
         title = request.args.get('title', type=str)
         author = request.args.get('author', type=str)
+        genre = request.args.get("genre", type=str)
+        year = request.args.get("year", type=int)
+        availability = request.args.get('availability')
 
         if per_page > 100:
             per_page = 100
@@ -89,6 +91,12 @@ class BookService:
 
         if author:
             query = query.filter(Book.author.ilike(f"%{author}%"))
+
+        if genre:
+            query = query.filter(Book.genre.ilike(f"%{genre}%"))
+
+        if year and len(str(year)) == 4:
+            query = query.filter(Book.publication_year.ilike(f"{year}"))
 
         pagination = query.order_by(Book.created_at.desc()).paginate(
             page=page,
