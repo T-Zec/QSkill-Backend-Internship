@@ -14,6 +14,7 @@ class AuthService:
         username= data.get("username")
         email = data.get("email")
         password = data.get("password")
+        role = data.get("role", "member")  # Default role is "member" if not provided
 
         if not username or not email or not password:
             return jsonify({
@@ -38,6 +39,12 @@ class AuthService:
                 "success": False,
                 "message": "Password must be within 255 characters"
             }), 400
+        
+        if role not in ["admin", "member"]:
+            return jsonify({
+                "success": False,
+                "message": "Invalid role. Role must be either 'admin' or 'member'"
+            }), 400
 
         existing_user = User.query.filter(
             (User.email == email) | (User.username == username)
@@ -51,13 +58,13 @@ class AuthService:
 
         password_hash = generate_password_hash(password)
 
-        user = User(username=username, email=email, password_hash=password_hash)
+        user = User(username=username, email=email, password_hash=password_hash, role=role)
 
         db.session.add(user)
         db.session.commit()
 
         return jsonify({
-            "susccess": True,
+            "success": True,
             "message": "user registered successfully"
         }), 201
 
@@ -89,7 +96,7 @@ class AuthService:
                 "message": "Invalid credentials"
             }), 401
 
-        access_token = create_access_token(identity=str(user.id))
+        access_token = create_access_token(identity=str(user.id), additional_claims={"role": user.role})
 
         return jsonify({
             "success": True,
@@ -98,6 +105,7 @@ class AuthService:
             "user": {
                 "id": user.id,
                 "username": user.username,
-                "email": user.email
+                "email": user.email,
+                "role": user.role
             }
         }), 200

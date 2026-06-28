@@ -84,9 +84,7 @@ class BookService:
         if per_page > 100:
             per_page = 100
 
-        current_user_id = int(get_jwt_identity())
-
-        query = Book.query.filter_by(user_id=current_user_id)
+        query = Book.query
 
         if availability is not None:
             is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability
@@ -127,9 +125,7 @@ class BookService:
 
     @staticmethod
     def get_book(book_id):
-        current_user_id = int(get_jwt_identity())
-
-        book = Book.query.filter_by(user_id=current_user_id, id=book_id).first()
+        book = Book.query.get(book_id)
 
         if not book:
             return jsonify({
@@ -145,8 +141,8 @@ class BookService:
     @staticmethod
     def update_book(book_id):
         current_user_id = int(get_jwt_identity())
-
-        book = Book.query.filter_by(user_id=current_user_id, id=book_id).first()
+        
+        book = Book.query.filter_by(id=book_id, user_id=current_user_id).first()
 
         if not book:
             return jsonify({
@@ -220,9 +216,7 @@ class BookService:
         year = request.args.get("year", type=int)
         availability = request.args.get('availability')
 
-        current_user_id = int(get_jwt_identity())
-
-        query = Book.query.filter_by(user_id=current_user_id)
+        query = Book.query
 
         if availability is not None:
             is_available = True if availability.lower() == 'true' else False if availability.lower() == 'false' else availability

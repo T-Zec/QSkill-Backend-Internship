@@ -5,13 +5,16 @@ class Book(db.Model):
     __tablename__ = "books"
 
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String[255], unique=True, nullable=False)
-    author = db.Column(db.String[255], nullable=False)
-    genre = db.Column(db.String[100])
+    title = db.Column(db.String(255), unique=True, nullable=False)
+    author = db.Column(db.String(255), nullable=False)
+    genre = db.Column(db.String(100))
     publication_year = db.Column(db.Integer[4])
     availability = db.Column(db.Boolean, default=False)
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
+
+    user_id = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
+    user = db.relationship("User", backref="books")
 
     def to_dict(self):
         return {
@@ -22,5 +25,6 @@ class Book(db.Model):
             "publication_year": self.publication_year,
             "availability": self.availability,
             "created_at": self.created_at.isoformat(),
-            "updated_at": self.updated_at.isoformat()
+            "updated_at": self.updated_at.isoformat(),
+            "user_id": self.user_id
         }
