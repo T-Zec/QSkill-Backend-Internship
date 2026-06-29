@@ -5,6 +5,7 @@ from app.services.auth_service import AuthService
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
+# Authentication routes
 @auth_bp.route("/register", methods=['POST'])
 def register():
     return AuthService.register()
