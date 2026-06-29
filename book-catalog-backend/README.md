@@ -72,7 +72,33 @@ book-catalog-backend/
 ### Clone Repository
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
+=======
+<<<<<<< HEAD
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
+>>>>>>> project/book
+<<<<<<< HEAD
+>>>>>>> feature/book/polish
+=======
+>>>>>>> feature/book/polish
+>>>>>>> project/book
 cd book-catalog-backend
 ```
 
