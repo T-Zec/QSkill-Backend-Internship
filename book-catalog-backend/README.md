@@ -73,9 +73,20 @@ book-catalog-backend/
 
 ```bash
 <<<<<<< HEAD
+<<<<<<< HEAD
 git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
 =======
 git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+=======
+<<<<<<< HEAD
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
+>>>>>>> project/book
 >>>>>>> feature/book/polish
 cd book-catalog-backend
 ```
