@@ -72,7 +72,7 @@ book-catalog-backend/
 ### Clone Repository
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
 cd book-catalog-backend
 ```
 
@@ -210,6 +210,53 @@ Two user roles are supported:
 * Full CRUD access
 * Clear catalog
 * Manage all books
+
+---
+
+## Registration and Login
+
+### Registration
+
+```json
+POST /api/auth/register
+{
+    "username": "john_doe",
+    "email": "john.doe@example.com",
+    "password": "securepassword",
+    "role": "admin" # default: "member"
+}
+```
+
+### Login
+
+```json
+POST /api/auth/login
+{
+    "email": "john.doe@example.com",
+    "password": "securepassword"
+}
+```
+
+---
+
+## Pagination
+
+Books can be retrieved with pagination support:
+
+* `page`: The page number (default: 1)
+* `per_page`: Number of books per page (default: 10)
+
+---
+
+## Search
+
+Books can be searched by title, author, genre, publication year and availability using query parameters:
+
+* `title`: Search by title
+* `author`: Search by author
+* `genre`: Search by genre
+* `publication_year`: Search by publication year
+* `availability`: Search by availability
 
 ---
 
