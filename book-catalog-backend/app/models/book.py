@@ -9,7 +9,7 @@ class Book(db.Model):
     author = db.Column(db.String(255), nullable=False)
     genre = db.Column(db.String(100))
     publication_year = db.Column(db.Integer[4])
-    availability = db.Column(db.Boolean, default=False)
+    availability = db.Column(db.Boolean, default=True)
     created_at = db.Column(db.DateTime, default=datetime.now)
     updated_at = db.Column(db.DateTime, default=datetime.now, onupdate=datetime.now)
 

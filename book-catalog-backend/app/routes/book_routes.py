@@ -27,7 +27,7 @@ def delete_book(book_id):
 def clear_books():
     return BookService.clear_books()
 
-# Public routes for book retrieval
+# Authenticated routes for book retrieval
 @book_bp.route("", methods=['GET'])
 @jwt_required()
 def get_all_books():
