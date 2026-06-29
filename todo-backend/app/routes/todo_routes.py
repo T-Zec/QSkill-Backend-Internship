@@ -5,6 +5,7 @@ from app.services.todo_service import TodoService
 
 todo_bp = Blueprint('todos', __name__, url_prefix="/api/todos")
 
+# Todo routes
 @todo_bp.route("", methods=['POST'])
 @jwt_required()
 def create_todo():
@@ -35,7 +36,7 @@ def delete_todo(todo_id):
 def clear_todos():
     return TodoService.clear_todos()
 
-
+# Marking todos as complete or incomplete
 @todo_bp.route("/<int:todo_id>/complete", methods=['PATCH'])
 @jwt_required()
 def complete_todo(todo_id):
