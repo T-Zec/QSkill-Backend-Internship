@@ -72,7 +72,11 @@ book-catalog-backend/
 ### Clone Repository
 
 ```bash
+<<<<<<< HEAD
 git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend>
+=======
+git clone https://github.com/T-Zec/QSkill-Backend-Internship/tree/main/book-catalog-backend
+>>>>>>> feature/book/polish
 cd book-catalog-backend
 ```
 
